@@ -66,6 +66,36 @@
     });
 
 
+
+    // Subscribe submit
+    $("#signupsubmit").click(function(){
+      var email = $("#SignupEmail").val();
+      var name = $("#SignupName").val();
+      console.log("Submitting form for "+email+" and "+name);
+      var action="signup";
+
+      $.ajax({
+        url: "rct.py",
+        type: "get", //send it through get method
+        data: { 
+          "action": action, 
+          "email": email, 
+          "name": name
+        },
+        success: function(response) {
+          console.log("Got AJAX response "+response)
+          // $(".close").click();
+          // $("#togglevalidate").click();    
+        },
+        error: function(xhr,options,error) {
+          console.log("Got AJAX error "+error)
+        }
+      });
+      // Ignore the submit as a conventional response.
+      return false;
+    })
+
+
     // Unsubscribe submit
     $("#UnsubSubmit").click(function(){
       var email = $("#UnsubEmail").val();
