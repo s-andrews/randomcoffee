@@ -68,11 +68,28 @@ def subscribe(name,email):
 
 def unsubscribe(email):
 
+    # Make a connection
+    c = conn.cursor()
+
+    # Delete any previous requests from this person
+    c.execute("DELETE FROM request WHERE email=?",(email,))
+
+    # check to see if this email is subscribed.  If they're not then give up
+    c.execute("SELECT name,email FROM person WHERE email=?",(email,))
+
+    existing = c.fetchall()
+
+    print("Email was "+email, file=sys.stderr)
+
+    if not existing:
+        # They're not subscribed
+        send_error("Not subscribed")
+        return
+
+    name = existing[0][0]
+
     # Get a random code
     code = random_code()
-
-    # Add an entry to the database
-    c = conn.cursor()
 
     c.execute("INSERT INTO request (action,name,email,secret) values (?,?,?,?)",("unsubscribe","",email,code))
 

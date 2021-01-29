@@ -69,6 +69,8 @@
 
     // Subscribe submit
     $("#signupsubmit").click(subscribe)
+    // Subscribe submit
+    $("#UnsubSubmit").click(unsubscribe)
     // Validate submit
     $("#ValidSubmit").click(validate)
 
@@ -111,6 +113,31 @@
     return false;
   }
 
+  function unsubscribe() {
+    var email = $("#UnsubEmail").val();
+    console.log("Submitting unsubscribe for "+email);
+    var action="unsubscribe";
+
+    $.ajax({
+      url: "rct.py",
+      type: "get",
+      data: { 
+        "action": action, 
+        "email": email
+      },
+      success: function(response) {
+        console.log("Got AJAX response "+response)
+        $(".close").click();
+        $("#togglevalidate").click();    
+      },
+      error: function(xhr,options,error) {
+        console.log("Got AJAX error "+error)
+      }
+    });
+    // Ignore the submit as a conventional response.
+    return false;
+  }
+
 
   function validate() {
     var code = $("#ValidCode").val();
@@ -127,7 +154,7 @@
       success: function(response) {
         console.log("Got AJAX response "+response)
         $(".close").click();
-        // $("#togglevalidate").click();    
+        $("#togglesuccess").click();    
       },
       error: function(xhr,options,error) {
         //TODO: Put up a 'sorry that didn't work' error.
