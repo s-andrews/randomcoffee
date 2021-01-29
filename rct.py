@@ -68,7 +68,7 @@ def subscribe(name,email):
     # me == the sender's email address
     # you == the recipient's email address
     msg['Subject'] = f'Random Coffee Trial Signup'
-    msg['From'] = "Simon Andrews <simon.andrews@babraham.ac.uk>"
+    msg['From'] = "Random Coffee <babraham.bioinformatics@babraham.ac.uk>"
     msg['To'] = (f"{name} <{email}>")
 
     # Send the message via our own SMTP server.
@@ -116,7 +116,7 @@ def unsubscribe(email):
     # me == the sender's email address
     # you == the recipient's email address
     msg['Subject'] = f'Unsubscribe from Random Coffee Trial'
-    msg['From'] = "Simon Andrews <simon.andrews@babraham.ac.uk>"
+    msg['From'] = "Random Coffee <babraham.bioinformatics@babraham.ac.uk>"
     msg['To'] = (f"{name} <{email}>")
 
     # Send the message via our own SMTP server.
