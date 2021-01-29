@@ -113,7 +113,9 @@
         "name": name
       },
       success: function(response) {
-        console.log("Got AJAX response "+response)
+        $("#SignupEmail").val("");
+        $("#SignupName").val("");
+    
         $(".close").click();
         $("#togglevalidate").click();    
       },
@@ -157,6 +159,7 @@
         "email": email
       },
       success: function(response) {
+        $("#UnsubEmail").val("");
         $(".close").click();
         $("#togglevalidate").click();
       },
@@ -199,9 +202,9 @@
         "code": code
       },
       success: function(response) {
-        console.log("Got AJAX response "+response)
+        $("#ValidCode").val(""); 
         $(".close").click();
-        $("#togglesuccess").click();    
+        $("#togglesuccess").click();
       },
       error: function(xhr,options,error) {
         $("#validateerror").text(error);
