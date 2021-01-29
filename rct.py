@@ -136,28 +136,31 @@ def validate(code):
 
     c.execute("SELECT action,name,email FROM request WHERE secret=?",(code,))
 
-    rows = c.fetchall()
+    # There should only be one, and if there isn't we're in trouble
+    row = c.fetchone()
 
-    for row in rows:
-        # There's probably only ever going to be one unless something
-        # has gone horribly wrong, but what the heck
-        action = row[0]
-        name = row[1]
-        email = row[2]
+    if not row:
+        # The code doesn't match
+        send_error("No code found")
+        return
 
-        if action=="subscribe":
-            # Check they're not already subscribed
-            c.execute("SELECT email FROM person WHERE email=?",(email,))
-            existing = c.fetchall()
-            if not existing:
-                c.execute("INSERT INTO person (name,email) VALUES (?,?)",(name,email))
-        
-        elif action=="unsubscribe":
-            c.execute("DELETE FROM person WHERE email=?",(email,))
+    action = row[0]
+    name = row[1]
+    email = row[2]
 
-        else:
-            send_error(f"Unknown action {action}")
-            break
+    if action=="subscribe":
+        # Check they're not already subscribed
+        c.execute("SELECT email FROM person WHERE email=?",(email,))
+        existing = c.fetchall()
+        if not existing:
+            c.execute("INSERT INTO person (name,email) VALUES (?,?)",(name,email))
+    
+    elif action=="unsubscribe":
+        c.execute("DELETE FROM person WHERE email=?",(email,))
+
+    else:
+        send_error(f"Unknown action {action}")
+        return
 
     
     # Clean up
