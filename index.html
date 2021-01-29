@@ -237,6 +237,7 @@
                                         <div class="form-group">
                                           <label for="UnsubEmail">Email address</label>
                                           <input type="email" class="form-control form-control-lg" id="UnsubEmail" placeholder="Enter email" required>
+                                          <div class="invalid-feedback" id="unsubscribeerror">Something went wrong</div>
                                         </div>
                                         <button id="UnsubSubmit" type="submit" class="btn btn-primary">Unsubscribe</button>
                                     </form>
@@ -271,7 +272,8 @@
                                     <form>
                                         <div class="form-group">
                                             <label for="ValidCode">Code from Email</label>
-                                            <input type="text" class="form-control form-control-lg" id="ValidCode" placeholder="Enter code from email" required>
+                                            <input type="text" class="form-control form-control-lg" id="ValidCode" placeholder="Enter code from email" required>                                          <div class="invalid-feedback" id="unsubscribeerror">Something went wrong</div>
+                                            <div class="invalid-feedback" id="validateerror">Something went wrong</div>
                                         </div>
                                         <button id="ValidSubmit" type="submit" class="btn btn-primary">Submit</button>
                                     </form>

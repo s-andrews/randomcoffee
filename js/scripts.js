@@ -73,16 +73,6 @@
     $("#UnsubSubmit").click(unsubscribe)
     // Validate submit
     $("#ValidSubmit").click(validate)
-
-
-    // Unsubscribe submit
-    $("#UnsubSubmit").click(function(){
-      var email = $("#UnsubEmail").val();
-      console.log("Submitting form for "+email);
-      $(".close").click();
-      $("#togglevalidate").click();
-      return false;
-    })
   
   })(jQuery); // End of use strict
   
@@ -136,10 +126,29 @@
   }
 
   function unsubscribe() {
-    var email = $("#UnsubEmail").val();
-    console.log("Submitting unsubscribe for "+email);
-    var action="unsubscribe";
 
+    // Clear previous error
+    $("#unsubscribeerror").hide()
+    var error_message = ""
+    
+    var email = $("#UnsubEmail").val();
+
+
+    if (email.length == 0) {
+      error_message = "No email supplied"
+    }
+    else if (email.indexOf("@") < 0) {
+      error_message = "Doesn't look like an email address"
+    }
+
+    if (error_message.length > 0) {
+      $("#unsubscribeerror").text(error_message);
+      $("#unsubscribeerror").show();
+      return(false);
+    }
+
+    var action="unsubscribe";
+    
     $.ajax({
       url: "rct.py",
       type: "get",
@@ -148,15 +157,14 @@
         "email": email
       },
       success: function(response) {
-        console.log("Got AJAX response "+response)
         $(".close").click();
-        $("#togglevalidate").click();    
+        $("#togglevalidate").click();
       },
       error: function(xhr,options,error) {
-        $("#signuperror").text(error);
-        $("#signuperror").show();
+        $("#unsubscribeerror").text(error);
+        $("#unsubscribeerror").show();
         return(false);
-        }
+      }
     });
     // Ignore the submit as a conventional response.
     return false;
@@ -164,8 +172,23 @@
 
 
   function validate() {
+
+    // Clear previous error
+    $("#validateerror").hide()
+    var error_message = ""
+    
     var code = $("#ValidCode").val();
-    console.log("Submitting validation for "+code);
+
+    if (code.length == 0) {
+      error_message = "No code supplied"
+    }
+
+    if (error_message.length > 0) {
+      $("#validateerror").text(error_message);
+      $("#validateerror").show();
+      return(false);
+    }
+    
     var action="validate";
 
     $.ajax({
@@ -181,8 +204,9 @@
         $("#togglesuccess").click();    
       },
       error: function(xhr,options,error) {
-        //TODO: Put up a 'sorry that didn't work' error.
-        console.log("Got AJAX error "+error)
+        $("#validateerror").text(error);
+        $("#validateerror").show();
+        return(false);
       }
     });
     // Ignore the submit as a conventional response.
