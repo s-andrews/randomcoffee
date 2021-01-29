@@ -87,9 +87,31 @@
   })(jQuery); // End of use strict
   
   function subscribe() {
+
+    // Clear previous error
+    $("#signuperror").hide()
+
     var email = $("#SignupEmail").val();
     var name = $("#SignupName").val();
-    console.log("Submitting form for "+email+" and "+name);
+
+    var error_message = ""
+    
+    if (email.length == 0) {
+      error_message = "No email supplied"
+    }
+    else if (name.length == 0) {
+      error_message = "No name supplied"
+    }
+    else if (email.indexOf("@") < 0) {
+      error_message = "Doesn't look like an email address"
+    }
+
+    if (error_message.length > 0) {
+      $("#signuperror").text(error_message);
+      $("#signuperror").show();
+      return(false);
+    }
+
     var action="signup";
 
     $.ajax({
@@ -131,8 +153,10 @@
         $("#togglevalidate").click();    
       },
       error: function(xhr,options,error) {
-        console.log("Got AJAX error "+error)
-      }
+        $("#signuperror").text(error);
+        $("#signuperror").show();
+        return(false);
+        }
     });
     // Ignore the submit as a conventional response.
     return false;
