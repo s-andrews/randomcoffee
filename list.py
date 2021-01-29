@@ -17,8 +17,7 @@ for row in rows:
 
 print("Requests\n------")
 
-c.execute("SELECT action,email,name,secret FROM request")
-
+c.execute("SELECT action,email,name,secret,time FROM request")
 rows = c.fetchall()
 
 for row in rows:

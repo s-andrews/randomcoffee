@@ -12,12 +12,17 @@ conn = sqlite3.connect("db/rct.db")
 
 # Only run this to establish the db to start with.
 # c = conn.cursor()
-# c.execute('CREATE TABLE person (name text, email text)')
-# c.execute('CREATE TABLE request (action, text, name text, email text, secret text)')
+# c.execute('CREATE TABLE person (name TEXT, email TEXT)')
+# c.execute('CREATE TABLE request (action TEXT, name TEXT, email TEXT, secret TEXT, time TIMESTAMP DEFAULT CURRENT_TIMESTAMP )')
 # conn.commit()
 
 
 def main():
+    
+    # Remove stale requests
+    clean_up()
+
+    # Get the request details
     form = cgi.FieldStorage()
     action = form.getvalue("action").strip()
 
@@ -35,6 +40,12 @@ def send_error(error):
         print (f"Status: 500 Error {error}\nContent-type: text/html\n")
 
 
+def clean_up ():
+    # We only keep requests for 1 hour
+    c = conn.cursor()
+    c.execute("DELETE FROM request WHERE time < datetime('now','-1 hours')")
+    conn.commit()
+
 def subscribe(name,email):
 
     # Get a random code
@@ -42,6 +53,9 @@ def subscribe(name,email):
 
     # Add an entry to the database
     c = conn.cursor()
+
+    # Delete any previous requests from this person
+    c.execute("DELETE FROM request WHERE email=?",(email,))
 
     c.execute("INSERT INTO request (action,name,email,secret) values (?,?,?,?)",("subscribe",name,email,code))
 
