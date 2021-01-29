@@ -68,32 +68,7 @@
 
 
     // Subscribe submit
-    $("#signupsubmit").click(function(){
-      var email = $("#SignupEmail").val();
-      var name = $("#SignupName").val();
-      console.log("Submitting form for "+email+" and "+name);
-      var action="signup";
-
-      $.ajax({
-        url: "rct.py",
-        type: "get", //send it through get method
-        data: { 
-          "action": action, 
-          "email": email, 
-          "name": name
-        },
-        success: function(response) {
-          console.log("Got AJAX response "+response)
-          // $(".close").click();
-          // $("#togglevalidate").click();    
-        },
-        error: function(xhr,options,error) {
-          console.log("Got AJAX error "+error)
-        }
-      });
-      // Ignore the submit as a conventional response.
-      return false;
-    })
+    $("#signupsubmit").click(subscribe)
 
 
     // Unsubscribe submit
@@ -107,3 +82,29 @@
   
   })(jQuery); // End of use strict
   
+  function subscribe() {
+    var email = $("#SignupEmail").val();
+    var name = $("#SignupName").val();
+    console.log("Submitting form for "+email+" and "+name);
+    var action="signup";
+
+    $.ajax({
+      url: "rct.py",
+      type: "get",
+      data: { 
+        "action": action, 
+        "email": email, 
+        "name": name
+      },
+      success: function(response) {
+        console.log("Got AJAX response "+response)
+        $(".close").click();
+        $("#togglevalidate").click();    
+      },
+      error: function(xhr,options,error) {
+        console.log("Got AJAX error "+error)
+      }
+    });
+    // Ignore the submit as a conventional response.
+    return false;
+  }

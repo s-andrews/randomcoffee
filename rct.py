@@ -23,9 +23,17 @@ def main():
 
     if action == "signup":
         subscribe(form.getvalue("name"),form.getvalue("email"))
+    else if action == "unsubscribe":
+        unsubscribe(form.getvalue("email"))
+    else if action == "validate":
+        validate(form.getvalue("code"))
 
     else:
-        print (f"Status: 500 Bad Action {action}\nContent-type: text/html\n")
+        send_error (f"Bad Action {action}")
+
+def send_error(error):
+        print (f"Status: 500 Error {error}\nContent-type: text/html\n")
+
 
 def subscribe(name,email):
 
@@ -41,7 +49,7 @@ def subscribe(name,email):
 
     # Create a text/plain message
     msg = EmailMessage()
-    msg.set_content(f"You've signed up for a random coffee.  To prove it really was you please click on the link below to confirm your signup.\n\n{base_url}?action=validate&code={code}\n\nIf it wasn't you please delete this message and move on with your life :-)")
+    msg.set_content(f"You've signed up for a random coffee.  To prove it really was you please enter the code below into the validation form.\n\nYour code is {code}\n\nIf it wasn't you please delete this message and move on with your life :-)")
 
     # me == the sender's email address
     # you == the recipient's email address
@@ -58,10 +66,81 @@ def subscribe(name,email):
     print(f"Action was sent email")
 
 
+def unsubscribe(email):
+
+    # Get a random code
+    code = random_code()
+
+    # Add an entry to the database
+    c = conn.cursor()
+
+    c.execute("INSERT INTO request (action,name,email,secret) values (?,?,?,?)",("unsubscribe","",email,code))
+
+    conn.commit()
+
+    # Create a text/plain message
+    msg = EmailMessage()
+    msg.set_content(f"You've requested removal from random coffees.  To prove it really was you please enter the code below into the validation form.\n\nYour code is {code}\n\nIf it wasn't you please delete this message and move on with your life :-)")
+
+    # me == the sender's email address
+    # you == the recipient's email address
+    msg['Subject'] = f'Unsubscribe from Random Coffee Trial'
+    msg['From'] = "Simon Andrews <simon.andrews@babraham.ac.uk>"
+    msg['To'] = (f"{name} <{email}>")
+
+    # Send the message via our own SMTP server.
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
+
+    print(f"Content-type: text/plain\n")
+    print(f"Action was sent email")
+
+def validate(code):
+
+
+    # Look for an entry in the database
+    c = conn.cursor()
+
+    c.execute("SELECT (action,name,email) FROM request WHERE secret=?",(code))
+
+    rows = c.fetchall()
+
+    for row in rows:
+        # There's probably only ever going to be one unless something
+        # has gone horribly wrong, but what the heck
+        action = row[0]
+        name = row[1]
+        email = row[2]
+
+        if action=="subscribe":
+            # Check they're not already subscribed
+            c.execute("SELECT email FROM person WHERE email=?",(email))
+            existing = c.fetchall()
+            if len(existing == 0):
+                c.execute("INSERT INTO person (name,email) VALUES (?,?)",(name,email))
+        
+        else if action=="unsubscribe":
+            c.execute("DELETE FROM person WHERE email=?",(email))
+
+        else:
+            send_error(f"Unknown action {action}")
+            break
+
+    
+    # Clean up
+    c.execute("DELETE FROM request WHERE secret=?",(code))
+
+    conn.commit()
+
+    print(f"Content-type: text/plain\n")
+    print(f"Action was successful")
+
+
 def random_code():
     code = []
 
-    for _ in range(20):
+    for _ in range(6):
         code.append(random.choice(string.ascii_letters + string.digits))
 
     return "".join(code)
