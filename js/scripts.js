@@ -69,6 +69,8 @@
 
     // Subscribe submit
     $("#signupsubmit").click(subscribe)
+    // Validate submit
+    $("#ValidSubmit").click(validate)
 
 
     // Unsubscribe submit
@@ -102,6 +104,33 @@
         $("#togglevalidate").click();    
       },
       error: function(xhr,options,error) {
+        console.log("Got AJAX error "+error)
+      }
+    });
+    // Ignore the submit as a conventional response.
+    return false;
+  }
+
+
+  function validate() {
+    var code = $("#ValidCode").val();
+    console.log("Submitting validation for "+code);
+    var action="validate";
+
+    $.ajax({
+      url: "rct.py",
+      type: "get",
+      data: { 
+        "action": action, 
+        "code": code
+      },
+      success: function(response) {
+        console.log("Got AJAX response "+response)
+        $(".close").click();
+        // $("#togglevalidate").click();    
+      },
+      error: function(xhr,options,error) {
+        //TODO: Put up a 'sorry that didn't work' error.
         console.log("Got AJAX error "+error)
       }
     });

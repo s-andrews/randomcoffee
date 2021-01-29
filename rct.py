@@ -5,10 +5,10 @@ from email.message import EmailMessage
 import sqlite3
 import random
 import string
+import sys
 
 
 conn = sqlite3.connect("db/rct.db")
-base_url = "https://www.bioinformatics.babraham.ac.uk/rct/rct.py"
 
 # Only run this to establish the db to start with.
 # c = conn.cursor()
@@ -23,9 +23,9 @@ def main():
 
     if action == "signup":
         subscribe(form.getvalue("name"),form.getvalue("email"))
-    else if action == "unsubscribe":
+    elif action == "unsubscribe":
         unsubscribe(form.getvalue("email"))
-    else if action == "validate":
+    elif action == "validate":
         validate(form.getvalue("code"))
 
     else:
@@ -98,11 +98,12 @@ def unsubscribe(email):
 
 def validate(code):
 
+    print("Code is "+code,file=sys.stderr)
 
     # Look for an entry in the database
     c = conn.cursor()
 
-    c.execute("SELECT (action,name,email) FROM request WHERE secret=?",(code))
+    c.execute("SELECT action,name,email FROM request WHERE secret=?",(code,))
 
     rows = c.fetchall()
 
@@ -115,13 +116,13 @@ def validate(code):
 
         if action=="subscribe":
             # Check they're not already subscribed
-            c.execute("SELECT email FROM person WHERE email=?",(email))
+            c.execute("SELECT email FROM person WHERE email=?",(email,))
             existing = c.fetchall()
-            if len(existing == 0):
+            if not existing:
                 c.execute("INSERT INTO person (name,email) VALUES (?,?)",(name,email))
         
-        else if action=="unsubscribe":
-            c.execute("DELETE FROM person WHERE email=?",(email))
+        elif action=="unsubscribe":
+            c.execute("DELETE FROM person WHERE email=?",(email,))
 
         else:
             send_error(f"Unknown action {action}")
@@ -129,7 +130,7 @@ def validate(code):
 
     
     # Clean up
-    c.execute("DELETE FROM request WHERE secret=?",(code))
+    c.execute("DELETE FROM request WHERE secret=?",(code,))
 
     conn.commit()
 
