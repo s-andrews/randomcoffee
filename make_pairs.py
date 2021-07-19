@@ -19,7 +19,6 @@ def main():
     iteration_count = 0
     while found_previous_pair:
 
-        print("Searching for pairs")
         found_previous_pair = False
         iteration_count += 1
 
@@ -34,7 +33,7 @@ def main():
             
             else:
                 if seen_before(person1,person,c):
-                    print(f"Found previous pair {person1[1]} and {person[1]}")
+                    # print(f"Found previous pair {person1[1]} and {person[1]}")
                     found_previous_pair = True
                     break
 
@@ -49,7 +48,7 @@ def main():
 
     # Add the pairings to the database
     for pair in pairs:
-        emailpair = [x[1].lower() for x in pair]
+        emailpair = [x[0].lower() for x in pair]
         emailpair.sort()
         emailpair = ":".join(emailpair)
         c.execute("INSERT INTO pairing (emailpair) VALUES (?)",(emailpair,))
@@ -61,7 +60,7 @@ def main():
 
 
 def seen_before(p1,p2,c):
-    emailpair = [p1[1].lower(),p2[1].lower()]
+    emailpair = [p1[0].lower(),p2[0].lower()]
     emailpair.sort()
     emailpair = ":".join(emailpair)
 
