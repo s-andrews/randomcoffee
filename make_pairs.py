@@ -6,30 +6,70 @@ def main():
     conn = sqlite3.connect("db/rct.db")
 
     c = conn.cursor()
-
     c.execute("SELECT email,name FROM person")
-
     people = c.fetchall()
 
-    random.shuffle(people)
+    found_previous_pair = True
 
-    person1 = None
+    # This is nastily inefficient in that we just try pairing 
+    # everyone and we give up as soon as we hit a previous
+    # pairing.  It'll work well enough for now but we'll need 
+    # to be more efficient eventually.
+
+    iteration_count = 0
+    while found_previous_pair:
+
+        found_previous_pair = False
+        iteration_count += 1
+
+        random.shuffle(people)
+        person1 = None
+
+        pairs = []
+
+        for person in people:
+            if person1 is None:
+                person1 = person
+            
+            else:
+                if seen_before(person1,person):
+                    found_previous_pair = True
+                    break
+
+                pairs.append([person1,person])
+                person1 = None
+
+        if person1:
+            print(f"{person1[0]} is lonely")
 
 
-    for person in people:
-        if person1 is None:
-            person1 = person
-        
-        else:
-            match_pair(person1,person)
-            person1 = None
+    print(f"Found pairings in {iteration_count} iterations")
+
+    # Add the pairings to the database
+    for pair in pairs:
+        emailpair = [x[1].lower() for x in pair]
+        emailpair.sort()
+        emailpair = ":".join(emailpair)
+        c.execute("INSERT INTO pairing (emailpair) VALUES (?)",(emailpair,))
+
+    c.commit()
+
+    for pair in pairs:
+        print(pair[0][1]+" matched with "+pair[1][1])
 
 
-    if person1:
-        print(f"{person1[0]} is lonely")
+def seen_before(p1,p2,c):
+    emailpair = [p1[1].lower(),p2[1].lower()]
+    emailpair.sort()
+    emailpair = ":".join(emailpair)
 
-def match_pair(p1,p2):
-    print(f"{p1[0]} is matched with {p2[0]}")
+    c.execute("SELECT emailpair FROM pairing WHERE emailpair=?",emailpair)
+
+    if c.fetchall:
+        return True
+
+    return False
+
 
 
 
