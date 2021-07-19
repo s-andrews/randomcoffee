@@ -33,6 +33,7 @@ def main():
             
             else:
                 if seen_before(person1,person,c):
+                    print(f"Found previous pair {person1[1]} and {person[1]}")
                     found_previous_pair = True
                     break
 
@@ -43,7 +44,7 @@ def main():
             print(f"{person1[0]} is lonely")
 
 
-    print(f"Found pairings in {iteration_count} iterations")
+        print(f"Found pairings in {iteration_count} iterations")
 
     # Add the pairings to the database
     for pair in pairs:
