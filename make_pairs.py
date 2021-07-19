@@ -19,6 +19,7 @@ def main():
     iteration_count = 0
     while found_previous_pair:
 
+        print("Searching for pairs")
         found_previous_pair = False
         iteration_count += 1
 
@@ -44,7 +45,7 @@ def main():
             print(f"{person1[0]} is lonely")
 
 
-        print(f"Found pairings in {iteration_count} iterations")
+        print(f"Found pairings in {iteration_count} iterations previous pair is {found_previous_pair}")
 
     # Add the pairings to the database
     for pair in pairs:
