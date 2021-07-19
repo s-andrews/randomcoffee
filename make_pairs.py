@@ -32,7 +32,7 @@ def main():
                 person1 = person
             
             else:
-                if seen_before(person1,person):
+                if seen_before(person1,person,c):
                     found_previous_pair = True
                     break
 
