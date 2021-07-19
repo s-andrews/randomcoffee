@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import sqlite3
 import random
+from email.message import EmailMessage
+import smtplib
 
 def main():
     conn = sqlite3.connect("db/rct.db")
@@ -58,6 +60,9 @@ def main():
     for pair in pairs:
         print(pair[0][1]+" matched with "+pair[1][1])
 
+    send_email(("simon.andrews@babraham.ac.uk","Simon Andrews"),("babraham.bioinformatics@babraham.ac.uk","Babraham Bioinformatics"))
+
+
 
 def seen_before(p1,p2,c):
     emailpair = [p1[0].lower(),p2[0].lower()]
@@ -70,6 +75,44 @@ def seen_before(p1,p2,c):
         return True
 
     return False
+
+
+def send_email(person1, person2):
+    # Create a text/plain message
+    msg = EmailMessage()
+    msg.set_content(f"""
+    Hi {person1[0]} and {person2[0]},
+
+    Please meet your latest random coffee partner. 
+
+    You've been automatically paired up, but from here it's up to you to
+    arrange an actual date and time to meet up, either in person or virtually.
+
+    The Random Coffee Robot.
+
+    PS You can unsubscribe from these messages at any point by going to:
+
+    https://www.bioinformatics.babraham.ac.uk/rct/
+
+    ..and clicking on the unsubscribe button.  
+    
+    Any comments or suggestions about this projcet, please email elizabeth.wynn@babraham.ac.uk
+
+    Any technical problems, please email simon.andrews@babraham.ac.uk
+
+    """)
+
+    # me == the sender's email address
+    # you == the recipient's email address
+    msg['Subject'] = f'Your Random Coffee Match!'
+    msg['From'] = "Random Coffee <babraham.bioinformatics@babraham.ac.uk>"
+    msg['To'] = (f"{person1[1]} <{person1[0]}>; {person2[1]} <{person2[0]}>")
+
+
+    # Send the message via our own SMTP server.
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
 
 
 
