@@ -53,7 +53,7 @@ def main():
         emailpair = ":".join(emailpair)
         c.execute("INSERT INTO pairing (emailpair) VALUES (?)",(emailpair,))
 
-    c.commit()
+    conn.commit()
 
     for pair in pairs:
         print(pair[0][1]+" matched with "+pair[1][1])
