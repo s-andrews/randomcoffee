@@ -64,8 +64,9 @@ def seen_before(p1,p2,c):
     emailpair.sort()
     emailpair = ":".join(emailpair)
 
+    c.execute("SELECT * FROM pairing WHERE emailpair=?",(emailpair,))
 
-    if c.fetchall:
+    if c.fetchall():
         return True
 
     return False
