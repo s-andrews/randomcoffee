@@ -41,11 +41,11 @@ def main():
                 pairs.append([person1,person])
                 person1 = None
 
-        if person1:
+        if not found_previous_pair and person1:
             print(f"{person1[0]} is lonely")
 
-
-        print(f"Found pairings in {iteration_count} iterations previous pair is {found_previous_pair}")
+        if not found_previous_pair:
+            print(f"Found pairings in {iteration_count} iterations")
 
     # Add the pairings to the database
     for pair in pairs:
