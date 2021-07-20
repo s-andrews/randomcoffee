@@ -59,9 +59,7 @@ def main():
 
     for pair in pairs:
         print(pair[0][1]+" matched with "+pair[1][1])
-
-    send_email(("simon.andrews@babraham.ac.uk","Simon Andrews"),("babraham.bioinformatics@babraham.ac.uk","Babraham Bioinformatics"))
-
+        send_email(pair[0],pair[1])
 
 
 def seen_before(p1,p2,c):
