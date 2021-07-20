@@ -88,10 +88,8 @@ Please meet your latest random coffee partner.
 You've been automatically paired up, but from here it's up to you to arrange an actual date and time to meet up, either in person or virtually.
 
 The Random Coffee Robot.
-
 -- 
-You can unsubscribe from these messages at any point by going to https://www.bioinformatics.babraham.ac.uk/rct/ and clicking on the unsubscribe button.  
-Any comments or suggestions about this projcet, please email elizabeth.wynn@babraham.ac.uk. Any technical problems, please email simon.andrews@babraham.ac.uk
+You can unsubscribe from these messages at any point by going to https://www.bioinformatics.babraham.ac.uk/rct/ and clicking on the unsubscribe button. Any comments or suggestions about this projcet, please email elizabeth.wynn@babraham.ac.uk. Any technical problems, please email simon.andrews@babraham.ac.uk
 """)
 
     # me == the sender's email address
