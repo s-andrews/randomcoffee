@@ -81,7 +81,7 @@ def send_email(person1, person2):
     # Create a text/plain message
     msg = EmailMessage()
     msg.set_content(f"""
-    Hi {person1[0]} and {person2[0]},
+    Hi {person1[1]} and {person2[1]},
 
     Please meet your latest random coffee partner. 
 
