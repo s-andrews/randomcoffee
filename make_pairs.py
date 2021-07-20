@@ -98,7 +98,7 @@ Any comments or suggestions about this projcet, please email elizabeth.wynn@babr
     # you == the recipient's email address
     msg['Subject'] = f'Your Random Coffee Match!'
     msg['From'] = "Random Coffee <babraham.bioinformatics@babraham.ac.uk>"
-    msg['To'] = (f"{person1[1]} <{person1[0]}>; {person2[1]} <{person2[0]}>")
+    msg['To'] = (f"{person1[1]} <{person1[0]}>, {person2[1]} <{person2[0]}>")
 
 
     # Send the message via our own SMTP server.
